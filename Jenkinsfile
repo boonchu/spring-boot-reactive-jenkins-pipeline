@@ -33,7 +33,7 @@ spec:
         stage('Build') {
             steps {
                 git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
-                withMaven( maven: 'maven-3') {
+                withMaven( maven: 'maven-3', jdk: 'Java 8') {
                     sh 'echo "Maven Build step"'
                     sh 'mvn clean install -DskipTests=true -f pom.xml'
                 }
@@ -42,7 +42,7 @@ spec:
         stage('Test') {
             steps {
                 git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
-                withMaven( maven: 'maven-3') {
+                withMaven( maven: 'maven-3', jdk: 'Java 8') {
                     sh 'echo "Maven Testing step"'
                     sh 'mvn test -f pom.xml'
                 }
