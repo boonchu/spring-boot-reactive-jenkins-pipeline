@@ -30,22 +30,40 @@ spec:
         }
     }
     stages {
-        stage('Install') {
-            steps {
-                sh 'echo "maven install step"'
-                sh 'docker run --rm -v $(pwd):/app -v /root/.m2:/root/.m2 maven:3.6.2-jdk-11 mvn clean install -DskipTests=true -f /app/pom.xml'
-                sh "ls -l" 
+        stage('Build') {
+            git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
+
+            withMaven(
+                // Maven installation declared in the Jenkins "Global Tool Configuration"
+                maven: 'maven-3', // (1)
+                // Use `$WORKSPACE/.repository` for local repository folder to avoid shared repositories
+                mavenLocalRepo: '.repository', // (2)
+                // Maven settings.xml file defined with the Jenkins Config File Provider Plugin
+                // We recommend to define Maven settings.xml globally at the folder level using
+                // navigating to the folder configuration in the section "Pipeline Maven Configuration / Override global Maven configuration"
+                // or globally to the entire master navigating to  "Manage Jenkins / Global Tools Configuration"
+                mavenSettingsConfig: 'my-maven-settings' // (3)
+            ){
+                sh 'echo "Maven Build step"'
+                sh 'mvn clean install -DskipTests=true -f /app/pom.xml'
             }
         }
-        stage('Build') {
-            steps {
-                sh 'echo "Maven Build step"'
-            }   
-        }
         stage('Test') {
-            steps {
+            git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
+
+            withMaven(
+                // Maven installation declared in the Jenkins "Global Tool Configuration"
+                maven: 'maven-3', // (1)
+                // Use `$WORKSPACE/.repository` for local repository folder to avoid shared repositories
+                mavenLocalRepo: '.repository', // (2)
+                // Maven settings.xml file defined with the Jenkins Config File Provider Plugin
+                // We recommend to define Maven settings.xml globally at the folder level using
+                // navigating to the folder configuration in the section "Pipeline Maven Configuration / Override global Maven configuration"
+                // or globally to the entire master navigating to  "Manage Jenkins / Global Tools Configuration"
+
+            ){
                 sh 'echo "Maven Testing step"'
-                sh 'docker run --rm -v $(pwd):/app -v /root/.m2:/root/.m2 maven:3.6.2-jdk-11 mvn test -f /app/pom.xml'
+                sh 'mvn test -f /app/pom.xml'
             }
         }
         stage('Deploy') {
