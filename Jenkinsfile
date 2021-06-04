@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: shell
-    image: centos
+    image: centos:7
     command:
     - sleep
     args:
