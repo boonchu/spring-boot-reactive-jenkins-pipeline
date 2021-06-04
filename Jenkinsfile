@@ -44,8 +44,10 @@ spec:
                 // or globally to the entire master navigating to  "Manage Jenkins / Global Tools Configuration"
                 mavenSettingsConfig: 'my-maven-settings' // (3)
             ){
-                sh 'echo "Maven Build step"'
-                sh 'mvn clean install -DskipTests=true -f /app/pom.xml'
+                steps {
+                   sh 'echo "Maven Build step"'
+                   sh 'mvn clean install -DskipTests=true -f /app/pom.xml'
+                }
             }
         }
         stage('Test') {
@@ -62,8 +64,10 @@ spec:
                 // or globally to the entire master navigating to  "Manage Jenkins / Global Tools Configuration"
 
             ){
-                sh 'echo "Maven Testing step"'
-                sh 'mvn test -f /app/pom.xml'
+                steps {
+                   sh 'echo "Maven Testing step"'
+                   sh 'mvn test -f /app/pom.xml'
+                }
             }
         }
         stage('Deploy') {
