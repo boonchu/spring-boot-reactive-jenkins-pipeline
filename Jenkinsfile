@@ -32,21 +32,19 @@ spec:
     stages {
         stage('Install') {
             steps {
-                echo 'Mvn Install'
-                echo '******************************'
+                sh 'echo "maven install step"'
                 sh 'docker run --rm -v $(pwd):/app -v /root/.m2:/root/.m2 maven:3.6.2-jdk-11 mvn clean install -DskipTests=true -f /app/pom.xml'
                 sh "ls -l" 
             }
         }
         stage('Build') {
             steps {
-                sh 'echo "Build step"'
+                sh 'echo "Maven Build step"'
             }   
         }
         stage('Test') {
             steps {
-                echo 'Mvn Test'
-                echo '******************************'
+                sh 'echo "Maven Testing step"'
                 sh 'docker run --rm -v $(pwd):/app -v /root/.m2:/root/.m2 maven:3.6.2-jdk-11 mvn test -f /app/pom.xml'
             }
         }
