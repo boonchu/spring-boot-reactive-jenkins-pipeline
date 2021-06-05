@@ -8,7 +8,7 @@ kind: Pod
 spec:
   containers:
   - name: shell
-    image: centos:7
+    image: adoptopenjdk/openjdk11:alpine
     command:
     - sleep
     args:
@@ -21,7 +21,7 @@ spec:
         stage('Build') {
             steps {
                 git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
-                withMaven( maven: 'maven-3', jdk: 'Java 8') {
+                withMaven( maven: 'maven-3') {
                     sh 'echo "Maven Build step"'
                     sh 'mvn clean install -DskipTests=true -f pom.xml'
                 }
@@ -30,7 +30,7 @@ spec:
         stage('Test') {
             steps {
                 git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
-                withMaven( maven: 'maven-3', jdk: 'Java 8') {
+                withMaven( maven: 'maven-3') {
                     sh 'echo "Maven Testing step"'
                     sh 'mvn test -f pom.xml'
                 }
