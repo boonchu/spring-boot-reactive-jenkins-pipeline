@@ -1,4 +1,4 @@
-package me.boonchu.learning.JacocoExample;
+package me.boonchu.learning;
 
 public class Palindrome {
     public boolean isPalindrome(String inputString) {
