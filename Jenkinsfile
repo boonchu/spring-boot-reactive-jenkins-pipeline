@@ -18,21 +18,28 @@ spec:
         }
     }
     stages {
-        stage('Build') {
+        stage('Checkout SCM') {
             steps {
                 git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
+            }
+        }
+        stage('Build') {
+            steps {
                 withMaven( maven: 'maven-3') {
-                    sh 'echo "Maven Build step"'
-                    sh 'mvn clean install -DskipTests=true -f pom.xml'
+                    configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                       sh 'echo "Maven Build step"'
+                       sh 'mvn clean install -DskipTests=true -f pom.xml'
+                    }
                 }
             }
         }
         stage('Test') {
             steps {
-                git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
                 withMaven( maven: 'maven-3') {
-                    sh 'echo "Maven Testing step"'
-                    sh 'mvn test -f pom.xml'
+                    configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                       sh 'echo "Maven Testing step"'
+                       sh 'mvn test -f pom.xml'
+                    }
                 }
            }
         }
