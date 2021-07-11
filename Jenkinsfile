@@ -7,14 +7,14 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: shell
+  - name: openjdk11
     image: adoptopenjdk/openjdk11:alpine
     command:
     - sleep
     args:
     - infinity
 '''
-            defaultContainer 'shell'
+            defaultContainer 'openjdk11'
         }
     }
     stages {
@@ -25,8 +25,8 @@ spec:
         }
         stage('Build') {
             steps {
-                withMaven( maven: 'maven-3') {
-                    configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                    withMaven( maven: 'maven-3') {
                        sh 'echo "Maven Build step"'
                        sh 'mvn clean install -DskipTests=true -f pom.xml'
                     }
@@ -35,8 +35,8 @@ spec:
         }
         stage('Test') {
             steps {
-                withMaven( maven: 'maven-3') {
-                    configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                    withMaven( maven: 'maven-3') {
                        sh 'echo "Maven Testing step"'
                        sh 'mvn test -f pom.xml'
                     }
