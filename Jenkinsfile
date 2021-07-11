@@ -30,8 +30,8 @@ spec:
         }
         stage('Build') {
             steps {
-                configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    withMaven( maven: 'maven-3') {
+                withMaven( maven: 'maven-3') {
+                    configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                        sh 'echo "Maven Build step"'
                        sh "mvn clean install -DskipTests=true -f pom.xml -gs $MAVEN_GLOBAL_SETTINGS"
                     }
@@ -40,8 +40,8 @@ spec:
         }
         stage('Test') {
             steps {
-                configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
-                    withMaven( maven: 'maven-3') {
+                withMaven( maven: 'maven-3') {
+                    configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                        sh 'echo "Maven Testing step"'
                        sh "mvn test -f pom.xml -gs $MAVEN_GLOBAL_SETTINGS"
                     }
