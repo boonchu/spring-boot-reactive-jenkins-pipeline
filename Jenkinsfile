@@ -1,5 +1,10 @@
 // Uses Declarative syntax to run commands inside a container.
 pipeline {
+
+    environment {
+        def CONFIG_FILE_UUID   = '8ac4e324-359d-4b24-9cc3-04893a7d56ce'
+    }
+
     agent {
         kubernetes {
             yaml '''
@@ -25,7 +30,7 @@ spec:
         }
         stage('Build') {
             steps {
-                configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     withMaven( maven: 'maven-3') {
                        sh 'echo "Maven Build step"'
                        sh 'mvn clean install -DskipTests=true -f pom.xml'
@@ -35,7 +40,7 @@ spec:
         }
         stage('Test') {
             steps {
-                configFileProvider([configFile(fileId: 'nexus-maven-settings.xml', variable: 'MAVEN_SETTINGS_XML')]) {
+                configFileProvider([configFile(fileId: "${CONFIG_FILE_UUID}", variable: 'MAVEN_GLOBAL_SETTINGS')]) {
                     withMaven( maven: 'maven-3') {
                        sh 'echo "Maven Testing step"'
                        sh 'mvn test -f pom.xml'
